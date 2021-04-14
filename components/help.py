@@ -109,7 +109,7 @@ def error(msg):
 def success(msg):
     print("[SUCCESS]",msg)
 
-def getSortedArgs(args):
+def getExchangeSortedArgs(args):
     if len(args) == 0:
         return [None, None, None, None]
 
@@ -127,3 +127,41 @@ def getSortedArgs(args):
 
     else:
         error("You must specify at least one and at most 4 arguments")
+
+
+def getInflationSortedArgs(args):
+    if len(args) == 0 or len(args) == 1 or len(args) >= 4:
+        return [None, None, None]
+
+    if len(args) == 2:
+        return twoArgsInf(args)
+
+    if len(args) == 3:
+        return threeArgsInf(args)
+
+def twoArgsInf(args):
+    arg1 = args[0]
+    arg2 = None
+
+    if isValidDate(args[1]):
+        arg2 = args[1]
+    else:
+        error("Invalid 2nd argument: Expected date(YYYY-mm-dd)")
+
+    return [arg1, arg2]
+
+def threeArgsInf(args):
+    arg1 = args[0]
+    arg2 = None
+    arg3 = None
+
+    if isValidDate(args[1]):
+        arg2 = args[1]
+        if isValidDate(args[2]):
+            arg3 = args[2]
+        else:
+            error("Invalid 3rd argument: Expected date (YYYY-mm-dd)")
+    else:
+        error("Invalid 2nd argument: Expected date (YYYY-mm-dd)")
+
+    return [arg1, arg2, arg3]
