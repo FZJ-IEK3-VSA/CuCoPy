@@ -91,17 +91,20 @@ def isValidBase(base):
 
 
 def isValidDate(date):
-    if not date == None:
-        isCorrectDate = None
-        date = date.split("-")
-        try:
-            date = datetime.datetime(int(date[0]),int(date[1]),int(date[2]))
-            isCorrectDate = True
-        except ValueError:
-            isCorrectDate = False
-        return isCorrectDate
+    if "-" in date:
+        if not date == None:
+            isCorrectDate = None
+            date = date.split("-")
+            try:
+                date = datetime.datetime(int(date[0]),int(date[1]),int(date[2]))
+                isCorrectDate = True
+            except ValueError:
+                isCorrectDate = False
+            return isCorrectDate
+        else:
+            return False
     else:
-        return False
+        return True
 
 def error(msg):
     raise Exception("[ERROR]",msg)
@@ -139,17 +142,6 @@ def getInflationSortedArgs(args):
     if len(args) == 3:
         return threeArgsInf(args)
 
-def twoArgsInf(args):
-    arg1 = args[0]
-    arg2 = None
-
-    if isValidDate(args[1]):
-        arg2 = args[1]
-    else:
-        error("Invalid 2nd argument: Expected date(YYYY-mm-dd)")
-
-    return [arg1, arg2]
-
 def threeArgsInf(args):
     arg1 = args[0]
     arg2 = None
@@ -164,4 +156,4 @@ def threeArgsInf(args):
     else:
         error("Invalid 2nd argument: Expected date (YYYY-mm-dd)")
 
-    return [arg1, arg2, arg3]
+    return [arg1, arg2, arg3, arg4]

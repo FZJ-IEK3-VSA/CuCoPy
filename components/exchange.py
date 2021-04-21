@@ -20,7 +20,10 @@ def normalizedTargetValue(base=None, targetBase=None, fromDate=None):
     if base == None or targetBase == None or fromDate == None:
         raise Exception()
 
-    fromYear = fromDate.split("-")[0]
+    if "-" in fromDate:
+        fromYear = fromDate.split("-")[0]
+    else:
+        fromYear = fromDate
 
     df_currency = pd.read_csv(legacy_path)
     df_baseRow = df_currency.loc[df_currency["Currency Code"] == base]
@@ -35,8 +38,15 @@ def normalizedTargetSpan(base=None, targetBase=None, fromDate=None, toDate=None)
     if base == None or targetBase == None or fromDate == None or toDate == None:
         raise Exception()
 
-    fromYear = int(fromDate.split("-")[0])
-    toYear = int(toDate.split("-")[0])
+    if "-" in fromDate:
+        fromYear = int(fromDate.split("-")[0])
+    else:
+        fromYear = int(fromDate)
+
+    if "-" in toDate:
+        toYear = int(toDate.split("-")[0])
+    else:
+        toYear = int(toDate)
 
     annualNormalizedValues = []
 

@@ -1,21 +1,22 @@
 from components import help as helper, inflation as infl, exchange as ex
 
 def main():
-    args = ["USD", "EUR", "2003-12-10"]
+    args = ["USD", "NOK", "2003"]
+    toDate = "2004"
     
     try:
         sortedArgs = helper.getExchangeSortedArgs(args)
         historicalRates = ex.getHistoricalRate(*sortedArgs)
         print(historicalRates)
 
-        inflationArgs = [historicalRates, args[2]]
+        inflationArgs = [historicalRates, args[1], args[2], toDate]
 
         try:
             inflationArgs.append(args[3])
         except Exception:
             print()
 
-        inflationArgs = helper.getInflationSortedArgs(inflationArgs)
+        print(inflationArgs)
         adjustedForInflation = infl.deflateCurrency(*inflationArgs)
 
         print(adjustedForInflation)
