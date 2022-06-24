@@ -1,8 +1,6 @@
 MIT License
 
-Copyright (C) 2021-2022 FZJ-IEK-3
-
-Active Developers: Julian Schönau
+Copyright (c) 2021-2022 FZJ-IEK-3
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -13,12 +11,6 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
-
-However, the CuCoPy package relies heavily on the datasets provided by the *World Bank Group* and the *International Monetary Fund* (IMF), but is neither affiliated with or endorsed by either parties. Both parties provide their data under unique conditions:
-
-The *World Bank* API provides extensive information about consumer price indices and is used under the CC BY 4.0 license. Its terms of use can be accessed here: https://data.worldbank.org/summary-terms-of-use, https://creativecommons.org/licenses/by/4.0/
-
-The *IMF* API provides information on international exchange rates and is used for research purposes. Their terms can be accessed here: https://www.imf.org/external/terms.htm
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,

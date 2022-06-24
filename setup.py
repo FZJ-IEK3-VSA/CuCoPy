@@ -8,8 +8,8 @@ with open(os.path.join(dir_path, 'README.md'), "r") as fh:
 setuptools.setup(
     name='cucopy',
     version='1.0',
-    author='Julian Schönau',
-    author_email='j.schoenau@fz-juelich.de',
+    author='Julian Schönau, Patrick Kuckertz, Jann Weinand, Leander Kotzur, Detlef Stolten',
+    author_email='j.schoenau@fz-juelich.de, p.kuckertz@fz-juelich.de, j.weinand@fz-juelich.de, l.kotzur@fz-juelich.de, d.stolten@fz-juelich.de',
     description='Module for exchanging monetary values and inflation adjustment.',
     long_description=long_description,
     long_description_content_type="text/markdown",
