@@ -40,7 +40,7 @@ class Currency(object):
         "T" : int(1e12)         
     }
 
-    def __init__(self, recording_year : str, value : float = 1, iso : str = 'de', **kwargs):
+    def __init__(self, recording_year : str, value : float = 1, iso : str = 'de', use_local_data=False, local_country=None, **kwargs):
         """
         Constructor for creating a Currency class instance
 
@@ -61,7 +61,9 @@ class Currency(object):
         self.recording_year = self._validate_year(recording_year)
         self.value = value
         self.iso = iso
-        self.parser = Parser(iso)
+        self.parser = Parser(iso, use_local_data)
+        self.use_local_data = use_local_data
+        self.local_country = local_country
 
         if('notation' in kwargs):
             _notation = kwargs.get('notation')
@@ -176,10 +178,18 @@ class Currency(object):
         :rtype: float
         """
         try:
-            recording_cpi = self.parser.get_cpi(self.recording_year)
+            if self.use_local_data:
+                recording_cpi = self.parser.get_cpi_from_csv(self.recording_year, _country=self.local_country)
+                recording_cpi = float(recording_cpi)
+            else:
+                recording_cpi = self.parser.get_cpi(self.recording_year)
 
             try:
-                target_cpi = self.parser.get_cpi(self.target_date)
+                if self.use_local_data:
+                    target_cpi = self.parser.get_cpi_from_csv(self.target_date, _country=self.local_country)
+                    target_cpi = float(target_cpi)
+                else:
+                    target_cpi = self.parser.get_cpi(self.target_date)
             except AttributeError:
                 warnings.warn("No target date specified. Did you forget to call \'set_target_year(year_str)\'?", RuntimeWarning)
                 return None
@@ -197,10 +207,16 @@ class Currency(object):
         :rtype: float
         """
         try:
-            recording_cpi = self.parser.get_cpi(self.recording_year)
+            if self.use_local_data:
+                recording_cpi = self.parser.get_cpi_from_csv(self.recording_year, _country=self.local_country)
+            else:
+                recording_cpi = self.parser.get_cpi(self.recording_year)
 
             try:
-                target_cpi = self.parser.get_cpi(self.target_date)
+                if self.use_local_data:
+                    target_cpi = self.parser.get_cpi_from_csv(self.target_date, _country=self.local_country)
+                else:
+                    target_cpi = self.parser.get_cpi(self.target_date)
             except AttributeError:
                 warnings.warn("No target date specified. Did you forget to call \'set_target_year(year_str)\'?", RuntimeWarning)
                 return None
@@ -232,8 +248,13 @@ class Currency(object):
             warnings.warn("ISO code {iso} not supported. Did you you check spelling?".format(iso=iso), RuntimeWarning)
             return None
 
-        self_exchange_rate = self.parser.get_exchange_rate(exchange_year)
-        other_exchange_rate = self.parser.get_exchange_rate(exchange_year, _iso=iso)
+        if self.use_local_data:
+            self_exchange_rate = self.parser.get_exchange_rate_from_csv(exchange_year, _country=self.local_country)
+            other_exchange_rate = self.parser.get_exchange_rate_from_csv(exchange_year, _country=self.local_country, _iso=iso)
+        else:
+            self_exchange_rate = self.parser.get_exchange_rate(exchange_year)
+            other_exchange_rate = self.parser.get_exchange_rate(exchange_year, _iso=iso)
 
         target_value = (other_exchange_rate/self_exchange_rate)*self.value
         return target_value
+        
