@@ -11,7 +11,7 @@ The CuCoPy package provides methods for exchanging currencies and adjusting mone
 ## Installation
 CuCoPy can be installed directly via git - this will preserve the connection to the GitHub repository:
 
-	git clone https://jugit.fz-juelich.de/iek-3/groups/data-and-model-integration/cucopy
+	git clone https://github.com/FZJ-IEK3-VSA/CuCoPy
 
 Then install CuCoPy via python as follows
 	
