@@ -9,7 +9,12 @@ The CuCoPy package provides methods for exchanging currencies and adjusting mone
 * exchange currencies from 260+ countries
 
 ## Installation
-CuCoPy can be installed directly via git - this will preserve the connection to the GitHub repository:
+
+CuCoPy can be installed directly via pip:
+
+	pip install cucopy
+
+Alternatively, it can also be installed via git - this will preserve the connection to the GitHub repository:
 
 	git clone https://github.com/FZJ-IEK3-VSA/CuCoPy
 
