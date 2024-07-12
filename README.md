@@ -54,7 +54,7 @@ Change the directory into the new repository
 ### Installation with Conda Dependencies
 Create a new environment with all necessary conda depenendcies
 
-	mamba env create -file=environment.yml
+	mamba env create --file=environment.yml
 
 Install the local package in development mode
 
