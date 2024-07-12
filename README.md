@@ -10,18 +10,61 @@ The CuCoPy package provides methods for exchanging currencies and adjusting mone
 
 ## Installation
 
+
+### Installation from conda-forge
+
+CuCoPy can be installed into a new environment with the following command
+
+	mamba create -n -c conda-forge cucopy_env cucopy
+
+Or can be installed into an exisitng and activated environment with
+
+	mamba install -c conda-forge cucopy
+ 
+
+**Note on Mamba vs.Conda:** `mamba` commands can be substitued with `conda`. We highly recommend using [(Micro-)Mamba](https://mamba.readthedocs.io/en/latest/) instead of Conda. The recommended way to use Mamba on your system is to install the [Miniforge distribution](https://github.com/conda-forge/miniforge#miniforge3). They offer installers for Windows, Linux and OS X. In principle, Conda and Mamba are interchangeable. The commands and concepts are the same. The distributions differ in the methodology for determining dependencies when installing Python packages. Mamba relies on a more modern methodology, which (with the same result) leads to very significant time savings during the installation of ETHOS.FINE. Switching to Mamba usually does not lead to any problems, as it is virtually identical to Conda in terms of operation.
+
+
+### Installation from pypi into a conda envrionment
+
+First create a new environment that contains python and pip
+
+	mamba create -n cucopy_env python pip
+
+Activate the environment
+
+	mamba activate cucopy_env
 CuCoPy can be installed directly via pip:
 
 	pip install cucopy
 
+**Note on using pip within a conda environment** To install packages within a conda environment pip must already be installed in that environment. Please see this [Stack Overflow post](https://stackoverflow.com/questions/41060382/using-pip-to-install-packages-to-anaconda-environment) and this [Anaconda Article](https://www.anaconda.com/blog/understanding-conda-and-pip).
+
+
+### Local installation for Development 
 Alternatively, it can also be installed via git - this will preserve the connection to the GitHub repository:
 
 	git clone https://github.com/FZJ-IEK3-VSA/CuCoPy
 
+Change the directory into the new repository
+
+	cd cucopy
+
+
+### Installation with Conda Dependencies
+Create a new environment with all necessary conda depenendcies
+
+	mamba env create -file=environment.yml
+
+Install the local package in development mode
+
+	pip install -e . --no-deps
+
+#### Installation with PyPi Dependencies
 Then install CuCoPy via python as follows
 	
-	cd cucopy
-	python setup.py install 
+	
+	pip install -e .
 
 ## Example	
 In the following code snippet, a value from 2010 is given in Euros and its remaining purchasing power in 2021 is to be calculated:
