@@ -124,23 +124,21 @@ A workflow to adjust for inflation and exchange the newly-adjusted value might l
 
 MIT License
 
-Copyright (c) 2021-2022 Julian Schönau (FZJ/IEK-3), Patrick Kuckertz (FZJ/IEK-3), Jann Weinand (FZJ/IEK-3), Leander Kotzur (FZJ/IEK-3), Detlef Stolten (FZJ/IEK-3)
+Copyright (c) 2021-2024 Julian Schönau (FZJ/ICE-2), Patrick Kuckertz (FZJ/ICE-2), Jann Weinand (FZJ/ICE-2), Leander Kotzur (FZJ/IEK-3), Detlef Stolten (FZJ/ICE-2)
 
 You should have received a copy of the MIT License along with this program.
 If not, see https://opensource.org/licenses/MIT
 
 ## About Us
 
-<p align="center"><a href="https://www.fz-juelich.de/en/iek/iek-3"><img src="https://github.com/OfficialCodexplosive/README_Assets/blob/master/iek3-wide.png?raw=true" alt="Institut TSA"></a></p>
-We are the <a href="https://www.fz-juelich.de/en/iek/iek-3">Institute of Energy and Climate Research - Techno-economic Systems Analysis (IEK-3)</a> belonging to the <a href="https://www.fz-juelich.de/en">Forschungszentrum Jülich</a>. Our interdisciplinary department's research is focusing on energy-related process and systems analyses. Data searches and system simulations are used to determine energy and mass balances, as well as to evaluate performance, emissions and costs of energy systems. The results are used for performing comparative assessment studies between the various systems. Our current priorities include the development of energy strategies, in accordance with the German Federal Government’s greenhouse gas reduction targets, by designing new infrastructures for sustainable and secure energy supply chains and by conducting cost analysis studies for integrating new technologies into future energy market frameworks.
+<p align="center"><a href="https://www.fz-juelich.de/en/ice/ice-2"><img src="https://raw.githubusercontent.com/FZJ-IEK3-VSA/README_assets/main/JSA-Header.svg" alt="Institut ICE-2"></a></p>
+We are the <a href="https://www.fz-juelich.de/en/ice/ice-2">Institute of Climate and Energy Systems (ICE) - Jülich Systems Analysis</a> belonging to the <a href="https://www.fz-juelich.de/en">Forschungszentrum Jülich</a>. Our interdisciplinary department's research is focusing on energy-related process and systems analyses. Data searches and system simulations are used to determine energy and mass balances, as well as to evaluate performance, emissions and costs of energy systems. The results are used for performing comparative assessment studies between the various systems. Our current priorities include the development of energy strategies, in accordance with the German Federal Government’s greenhouse gas reduction targets, by designing new infrastructures for sustainable and secure energy supply chains and by conducting cost analysis studies for integrating new technologies into future energy market frameworks.
 
 ## Acknowledgements
 
-The CuCoPy package relies heavily on the datasets made available by the *World Bank Group* and the *International Monetary Fund* (IMF), but is neither affiliated with or endorsed by either parties.
+The CuCoPy package relies heavily on the datasets made available by the *International Monetary Fund* (IMF), but is neither affiliated with or endorsed by either parties.
 
-The *World Bank* API provides extensive information about consumer price indices and is used under the CC BY 4.0 license. Its terms of use can be accessed here: https://data.worldbank.org/summary-terms-of-use, https://creativecommons.org/licenses/by/4.0/
-
-The *IMF* API provides information on international exchange rates and is used for research purposes. Their terms can be accessed here: https://www.imf.org/external/terms.htm
+The *IMF* API provides information on international exchange rates as well as consumer price indices and is used for research purposes. Their terms can be accessed here: https://www.imf.org/external/terms.htm
 
 This work is supported by the Federal Ministry for Economic Affairs and Climate Action (BMWK) with a grant for the project LOD-GEOSS (03EI1005B).
 

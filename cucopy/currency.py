@@ -31,7 +31,7 @@ class Currency(object):
     * the parser, which handles the extraction of consumer price indices and exchange rate information from the World Bank and International Monetary Fund respectively (**parser**)
     """
 
-    " dictionary of the most important scientific number notations and their value "
+    # dictionary of the most important scientific number notations and their value
     _allowed_notations = {
         ""  : int(1e0),
         "K" : int(1e3),
@@ -60,8 +60,8 @@ class Currency(object):
         """
         self.recording_year = self._validate_year(recording_year)
         self.value = value
-        self.iso = iso
-        self.parser = Parser(iso)
+        self.country_name = utils.map_iso_to_country_name(iso)
+        self.parser = Parser(self.country_name)
 
         if('notation' in kwargs):
             _notation = kwargs.get('notation')
@@ -94,22 +94,20 @@ class Currency(object):
         :param currency: the currency in which the value was recorded. The default is 'Eur'.
         :type currency: string
         """
-        if value == None:
-            value = 1
         if notation not in cls._allowed_notations:
             cls._allowed_notations[notation] = 10**notation_pow
         else:
             raise ValueError(f"Notation {notation} already defined.")
         return cls(recording_year, value, notation=notation, kwargs=kwargs)
 
-    def _validate_year(self, year_str):
+    def _validate_year(self, year_str : str):
         """
         Helper function for checking, if a given string matches the YYYY date format.
         """
         try:
             return datetime.datetime.strptime(year_str, "%Y").year
-        except ValueError:
-            raise ValueError("Incorrect year format, should be YYYY")
+        except ValueError as exc:
+            raise ValueError("Incorrect year format, should be YYYY") from exc
 
     def set_value(self, val):
         """
@@ -120,16 +118,16 @@ class Currency(object):
         """
         self.value = val
 
-    def set_recording_currency(self, iso_code):
+    def set_recording_currency(self, iso_code : str):
         """
         Function for setting the recording country, from which should be exchanged.
 
         :param iso_code: the recording country's ISO code
         :type iso_code: string
         """
-        self.iso = iso_code
+        self.country_name = utils.map_iso_to_country_name(iso_code)
 
-    def set_recording_year(self, year_str):
+    def set_recording_year(self, year_str : str):
         """
         Function for setting the recording year, from which should be adjusted.
 
@@ -138,7 +136,7 @@ class Currency(object):
         """
         self.recording_year = self._validate_year(year_str)
 
-    def set_target_year(self, year_str):
+    def set_target_year(self, year_str : str):
         """
         Function for setting the target year, to which should be adjusted to.
 
@@ -147,14 +145,14 @@ class Currency(object):
         """
         self.target_date = self._validate_year(year_str)
 
-    def set_target_currency(self, iso_code):
+    def set_target_currency(self, iso_code : str):
         """
         Function for setting the target country, to which should be exchanged to.
 
         :param iso_code: the target country's ISO code
         :type iso_code: string
         """
-        self.target_currency = iso_code
+        self.target_currency = utils.map_iso_to_country_name(iso_code)
 
     def real_value(self):
         """
@@ -210,7 +208,7 @@ class Currency(object):
             warnings.warn("No parser assigned. Did you forget to call \'set_parser(...)\'?", RuntimeWarning)
             return None
 
-    def get_exchanged_value(self, currency_iso=None):
+    def get_exchanged_value(self, currency_iso : str=None):
         """
         Function for calculating the worth of the current currency in another country.
         The resulting value indicates how much it would take of the target countrie's currency to match the value of the object's value.
@@ -220,20 +218,16 @@ class Currency(object):
         """
         exchange_year = self.recording_year
 
-        iso = currency_iso
-        if iso == None:
+        country = utils.map_iso_to_country_name(currency_iso)
+        if country == None:
             if self.target_currency == None:
                 warnings.warn("Target currency was not set. Either pass an iso code to get_exchanged_value(currency_iso) or set a target currency using set_target_currency(iso_code).", RuntimeWarning)
                 return None
             else:
-                iso = self.target_currency
-
-        if iso.upper() not in utils.IMF_SUPPORTED_GEO:
-            warnings.warn("ISO code {iso} not supported. Did you you check spelling?".format(iso=iso), RuntimeWarning)
-            return None
+                country = self.target_currency
 
         self_exchange_rate = self.parser.get_exchange_rate(exchange_year)
-        other_exchange_rate = self.parser.get_exchange_rate(exchange_year, _iso=iso)
+        other_exchange_rate = self.parser.get_exchange_rate(exchange_year, _country=country)
 
         target_value = (other_exchange_rate/self_exchange_rate)*self.value
         return target_value

@@ -1,73 +1,118 @@
-import urllib.request, json
+import urllib.request
+import json
+import requests
+import xml.etree.ElementTree as ET
 
-WB_BASE_URL = "http://api.worldbank.org/v2/country"
 IMF_BASE_URL = "http://dataservices.imf.org/REST/SDMX_JSON.svc/CompactData/IFS"
+IMF_CODELIST_URL = "https://sdmxcentral.imf.org/sdmx/v2/structure/codelist/IAEG-SDGs/CL_AREA/1.17"
 
-OUTPUT_FORMATS = ('xml','json')
-DOWNLOAD_FORMATS = ('csv','xml','json')
-
-WB_DATASET_IDS = {'cpi' : 'FP.CPI.TOTL', 'ppp' : 'PA.NUS.PPP', 'fcrf' : 'PA.NUS.FCRF'}
-WB_SUPPORTED_ISO = ('AW','ZH','AF','A9','ZI','AO','AL','AD','1A','AE','AR','AM','AS','AG','AU','AT','AZ','BI','B4','B7','BE','BJ','BF','BD','BG',
-                'B1','BH','BS','BA','B2','BY','BZ','B3','BM','BO','BR','BB','BN','B6','BT','BW','C9','CF','CA','C4','B8','C5','CH','JG','CL',
-                'CN','CI','C6','C7','CM','CD','CG','CO','KM','CV','CR','C8','S3','CU','CW','KY','CY','CZ','D4','D7','DE','D8','DJ','D2','DM',
-                'D3','D9','DK','N6','DO','D5','F6','D6','DZ','4E','V2','Z4','7E','Z7','EC','EG','XC','ER','ES','EE','ET','EU','F1','FI','FJ',
-                'FR','FO','FM','6F','GA','GB','GE','GH','GI','GN','GM','GW','GQ','GR','GD','GL','GT','GU','GY','XD','HK','HN','XE','HR','HT',
-                'HU','ZB','XF','ZT','XG','XH','ID','XI','IM','IN','XY','IE','IR','IQ','IS','IL','IT','JM','JO','JP','KZ','KE','KG','KH','KI',
-                'KN','KR','KW','XJ','LA','LB','LR','LY','LC','ZJ','XL','XM','LI','LK','XN','XO','LS','V3','LT','LU','LV','MO','MF','MA','MC',
-                'MD','M1','MG','MV','ZQ','MX','MH','XP','MK','ML','MT','MM','XQ','ME','MN','MP','MZ','MR','MU','MW','MY','XU','M2','NA','NC',
-                'NE','NG','NI','NL','NO','NP','6X','NR','6N','NZ','OE','OM','S4','PK','PA','PE','PH','PW','PG','PL','V1','PR','KP','PT','PY',
-                'PS','S2','V4','PF','QA','RO','R6','RU','RW','8S','SA','SD','SN','SG','SB','SL','SV','SM','SO','RS','ZF','SS','ZG','S1','ST',
-                'SR','SK','SI','SE','SZ','SX','A4','SC','SY','TC','TD','T4','T7','TG','TH','TJ','TM','T2','TL','T3','TO','T5','T6','TT','TN',
-                'TR','TV','TW','TZ','UG','UA','XT','UY','US','UZ','VC','VE','VG','VI','VN','VU','1W','WS','XK','A5','YE','ZA','ZM','ZW')
-
-IMF_DATASET_IDS = {'national_currency_per_sdr_eop':'ENSE_XDC_XDR_RATE', 'national_currency_per_sdr_aop':'ENSA_XDC_XDR_RATE'}
-IMF_SUPPORTED_GEO = ('AF','AL','DZ','AD','AO','AI','AG','5M','AR','AM','AW','AU','AT','AZ','BS','BH','BD','5W','5B','BB','BY','BE','R1','BZ',
-                'BJ','BM','BT','BO','BA','BW','BR','BN','BG','BF','BI','CV','KH','CM','CA','KY','CF','1C_752','TD','CL','HK','MO','CN','CO',
-                'KM','CD','CG','CR','CI','HR','CU','1C_355','CW','CY','CZ','CSH','DK','DJ','DM','DO','5I','DE2','EC','EG','SV','GQ','ER','EE',
-                'SZ','ET','U2','4F','FO','FJ','FI','FR','PF','GA','GM','GE','DE','GH','GI','GR','GL','GD','GP','GU','GT','GG','GF','GN','GW',
-                'GY','HT','HN','HU','IS','IN','ID','1E','X0','IR','IQ','IE','7B','IM','IL','IT','JM','JP','JE','JO','KZ','KE','KI','KR','XK',
-                'KW','KG','LA','LV','LB','LS','LR','LY','LT','LU','MG','MW','MY','MV','ML','MT','MH','MQ','MR','MU','MX','FM','MD','MN','ME',
-                'MS','MA','MZ','MM','NA','NR','NP','AN','NL','NC','NZ','NI','NE','NG','MK','NO','OM','PK','PW','PA','PG','PY','PE','PH','PL',
-                'PT','QA','RE','RO','RU','RW','PM','WS','SM','ST','SA','SN','RS','SC','SL','SG','SX','SK','SI','SB','SO','ZA','SS','ES','LK',
-                'KN','LC','VC','SD','SR','SE','CH','SY','TW','TJ','TZ','TH','TL','TG','TO','TT','TN','TR','TM','TC','TV','UG','UA','AE','GB',
-                'US','UY','SUH','UZ','VU','VE','VN','PS','1C_473','1C_459','YE','YUC','ZM','ZW','XR29','F1','F19','1C_ALLC','1C_ALL','W0',
-                '1C_All_Countries_Published','1C_ALLG','R16','5O','5X','1C_904','R14','Countries_Home_Portal_Presentation','F3','5Y','XS25',
-                'XR43','1C_903','1C_994','1C_EMU','E1','1C_080','1C_092','F97','F98','1C_Middle_East_and_Central_Asia','1C_440','1C_NANSA',
-                '1C_NASA','XR44','1C_NSC','XR21','XA69','1C_970','1C_SRF_less_EMU','1C_SRF_plus_EMU','1C_SRF','F6','7A','A10','W00')
+IMF_DATASET_IDS = {'national_currency_per_sdr_eop': 'ENSE_XDC_XDR_RATE',
+                   'national_currency_per_sdr_aop': 'ENSA_XDC_XDR_RATE',
+                   'cpi' : 'PCPI_IX'}
 
 
-def get_wb_dataset(id : str, date : str, iso : str = 'all', format='json', download_as=None):
-    dataset_url = get_wb_dataset_url(id=id, date=date, iso=iso, format=format, download_as=download_as)
-    with urllib.request.urlopen(dataset_url) as url:
-        data = json.loads(url.read().decode())
-    return data
+ISO_COUNTRY_MAP = { 'AF': 'afghanistan', 'AL': 'albania', 'DZ': 'algeria', 'AS': 'american samoa', 'AD': 'andorra',
+                    'AO': 'angola', 'AI': 'anguilla', 'AQ': 'antarctica', 'AG': 'antigua and barbuda', 'AR': 'argentina',
+                    'AM': 'armenia', 'AW': 'aruba', 'AU': 'australia', 'AT': 'austria', 'AZ': 'azerbaijan', 'BS': 'bahamas',
+                    'BH': 'bahrain', 'BD': 'bangladesh', 'BB': 'barbados', 'BY': 'belarus', 'BE': 'belgium', 'BZ': 'belize',
+                    'BJ': 'benin', 'BM': 'bermuda', 'BT': 'bhutan', 'BO': 'bolivia (plurinational state of)', 'BQ': 'bonaire, sint eustatius and saba', 
+                    'BA': 'bosnia and herzegovina', 'BW': 'botswana', 'BV': 'bouvet island', 'BR': 'brazil', 'IO': 'british indian ocean territory', 
+                    'BN': 'brunei darussalam', 'BG': 'bulgaria', 'BF': 'burkina faso', 'BI': 'burundi', 'CV': 'cabo verde', 'KH': 'cambodia', 
+                    'CM': 'cameroon', 'CA': 'canada', 'KY': 'cayman islands', 'CF': 'central african republic', 'TD': 'chad', 'CL': 'chile', 
+                    'CN': 'china', 'CX': 'christmas island', 'CC': 'cocos (keeling) islands', 'CO': 'colombia', 'KM': 'comoros', 
+                    'CD': 'democratic republic of the congo', 'CG': 'congo', 'CK': 'cook islands', 'CR': 'costa rica', 'HR': 'croatia', 
+                    'CU': 'cuba', 'CW': 'curaçao', 'CY': 'cyprus', 'CZ': 'czechia', 'CI': "côte d'ivoire", 'DK': 'denmark', 'DJ': 'djibouti', 
+                    'DM': 'dominica', 'DO': 'dominican republic', 'EC': 'ecuador', 'EG': 'egypt', 'SV': 'el salvador', 'GQ': 'equatorial guinea', 
+                    'ER': 'eritrea', 'EE': 'estonia', 'SZ': 'eswatini', 'ET': 'ethiopia', 'FK': 'falkland islands (malvinas)', 'FO': 'faroe islands', 
+                    'FJ': 'fiji', 'FI': 'finland', 'FR': 'france', 'GF': 'french guiana', 'PF': 'french polynesia', 'TF': 'french southern territories', 
+                    'GA': 'gabon', 'GM': 'gambia', 'GE': 'georgia', 'DE': 'germany', 'GH': 'ghana', 'GI': 'gibraltar', 'GR': 'greece', 'GL': 'greenland', 
+                    'GD': 'grenada', 'GP': 'guadeloupe', 'GU': 'guam', 'GT': 'guatemala', 'GG': 'guernsey', 'GN': 'guinea', 'GW': 'guinea-bissau',
+                    'GY': 'guyana', 'HT': 'haiti', 'HM': 'heard island and mcdonald islands', 'VA': 'holy see', 'HN': 'honduras', 'HK': 'hong kong', 
+                    'HU': 'hungary', 'IS': 'iceland', 'IN': 'india', 'ID': 'indonesia', 'IR': 'iran (islamic republic of)', 'IQ': 'iraq', 'IE': 'ireland', 
+                    'IM': 'isle of man', 'IL': 'israel', 'IT': 'italy', 'JM': 'jamaica', 'JP': 'japan', 'JE': 'jersey', 'JO': 'jordan', 'KZ': 'kazakhstan', 
+                    'KE': 'kenya', 'KI': 'kiribati', 'KP': "democratic people's republic of korea", 'KR': 'republic of korea', 'KW': 'kuwait', 
+                    'KG': 'kyrgyzstan', 'LA': "lao people's democratic republic", 'LV': 'latvia', 'LB': 'lebanon', 'LS': 'lesotho', 
+                    'LR': 'liberia', 'LY': 'libya', 'LI': 'liechtenstein', 'LT': 'lithuania', 'LU': 'luxembourg', 'MO': 'macao', 
+                    'MG': 'madagascar', 'MW': 'malawi', 'MY': 'malaysia', 'MV': 'maldives', 'ML': 'mali', 'MT': 'malta', 'MH': 'marshall islands', 
+                    'MQ': 'martinique', 'MR': 'mauritania', 'MU': 'mauritius', 'YT': 'mayotte', 'MX': 'mexico', 'FM': 'micronesia', 
+                    'MD': 'republic of moldova', 'MC': 'monaco', 'MN': 'mongolia', 'ME': 'montenegro', 'MS': 'montserrat', 'MA': 'morocco', 
+                    'MZ': 'mozambique', 'MM': 'myanmar', 'NA': 'namibia', 'NR': 'nauru', 'NP': 'nepal', 'NL': 'netherlands', 
+                    'NC': 'new caledonia', 'NZ': 'new zealand', 'NI': 'nicaragua', 'NE': 'niger', 'NG': 'nigeria', 'NU': 'niue', 
+                    'NF': 'norfolk island', 'MP': 'northern mariana islands', 'NO': 'norway', 'OM': 'oman', 'PK': 'pakistan', 
+                    'PW': 'palau', 'PS': 'state of palestine', 'PA': 'panama', 'PG': 'papua new guinea', 'PY': 'paraguay', 'PE': 'peru', 
+                    'PH': 'philippines', 'PN': 'pitcairn', 'PL': 'poland', 'PT': 'portugal', 'PR': 'puerto rico', 'QA': 'qatar', 
+                    'MK': 'republic of north macedonia', 'RO': 'romania', 'RU': 'russian federation', 'RW': 'rwanda', 'RE': 'réunion', 
+                    'BL': 'saint barthélemy', 'SH': 'saint helena', 'KN': 'saint kitts and nevis', 'LC': 'saint lucia', 
+                    'MF': 'saint martin (french part)', 'PM': 'saint pierre and miquelon', 'VC': 'saint vincent and the grenadines', 
+                    'WS': 'samoa', 'SM': 'san marino', 'ST': 'sao tome and principe', 'SA': 'saudi arabia', 'SN': 'senegal', 'RS': 'serbia', 
+                    'SC': 'seychelles', 'SL': 'sierra leone', 'SG': 'singapore', 'SX': 'sint maarten (dutch part)', 'SK': 'slovakia', 'SI': 'slovenia', 
+                    'SB': 'solomon islands', 'SO': 'somalia', 'ZA': 'south africa', 'GS': 'south georgia and the south sandwich islands', 
+                    'SS': 'south sudan', 'ES': 'spain', 'LK': 'sri lanka', 'SD': 'sudan', 'SR': 'suriname', 'SJ': 'svalbard and jan mayen', 
+                    'SE': 'sweden', 'CH': 'switzerland', 'SY': 'syrian arab republic', 'TW': 'taiwan', 'TJ': 'tajikistan', 
+                    'TZ': 'tanzania, united republic of', 'TH': 'thailand', 'TL': 'timor-leste', 'TG': 'togo', 'TK': 'tokelau', 'TO': 'tonga', 
+                    'TT': 'trinidad and tobago', 'TN': 'tunisia', 'TR': 'turkey', 'TM': 'turkmenistan', 'TC': 'turks and caicos islands', 
+                    'TV': 'tuvalu', 'UG': 'uganda', 'UA': 'ukraine', 'AE': 'united arab emirates', 'GB': 'united kingdom of great britain and northern ireland', 
+                    'UM': 'united states minor outlying islands', 'US': 'united states of america', 'UY': 'uruguay', 'UZ': 'uzbekistan', 'VU': 'vanuatu', 
+                    'VE': 'venezuela', 'VN': 'viet nam', 'VG': 'british virgin islands', 'VI': 'united states virgin islands', 'WF': 'wallis and futuna',
+                    'EH': 'western sahara', 'YE': 'yemen', 'ZM': 'zambia', 'ZW': 'zimbabwe', 'AX': 'åland islands'
+}
 
-def get_wb_dataset_url(id : str, date : str, iso : str = 'all', format='json', download_as=None):
-    if format not in OUTPUT_FORMATS:
-        raise ValueError('Format {format} is not supported. Available output formats are {output_formats}'.format(format=format, output_formats=OUTPUT_FORMATS))
+def map_iso_to_country_name(iso: str):
+    try:
+        return ISO_COUNTRY_MAP[iso.upper()]
+    except KeyError as exc:
+        raise ValueError(f"Invalid ISO code: {iso}") from exc
 
-    url = WB_BASE_URL+"/{iso_code}/indicator/{dataset_id}?format={output_format}".format(iso_code=iso, dataset_id=id, output_format=format)
+def get_letter_id_by_name(name: str):
+    res = requests.get(IMF_CODELIST_URL, timeout=60)
 
-    if date is not None:
-        url += "&date={date}".format(date=date)
+    if res.status_code != 200:
+        raise ValueError(f"Failed to fetch data from {IMF_CODELIST_URL}")
 
-    if download_as is not None:
-        if download_as not in DOWNLOAD_FORMATS:
-            raise ValueError('Download format {format} is not supported. Available download formats are {download_formats}'.format(format=download_as, output_formats=DOWNLOAD_FORMATS))
-        url += "&source=2&downloadformat={download_format}".format(download_as)
-    
-    return url
+    xml_content = res.content
+    tree = ET.ElementTree(ET.fromstring(xml_content))
 
-def get_imf_dataset(date : str, geo_code : str, indicator : str = 'ENSA_XDC_XDR_RATE'):
-    dataset_url = get_imf_dataset_url(date=date, geo_code=geo_code, indicator=indicator)
+    namespaces = {
+        'message': 'http://www.sdmx.org/resources/sdmxml/schemas/v3_0/message',
+        'str': 'http://www.sdmx.org/resources/sdmxml/schemas/v3_0/structure',
+        'com': 'http://www.sdmx.org/resources/sdmxml/schemas/v3_0/common'
+    }
+
+    codes = tree.findall('.//str:Code', namespaces)
+
+    for code in codes:
+        code_id = code.attrib['id']
+        try:
+            int(code_id)
+            continue
+        except:
+            pass
+
+        name_element = code.find('com:Name', namespaces)
+
+        if name_element is not None and name_element.text.lower() == name.lower():
+            return code_id
+
+    raise ValueError(f"Failed to find code for {name}")
+
+def get_single_imf_datapoint(dataset_id : str, country : str, year : str, frequency='A'):
+    data = get_imf_dataset(
+        indicator=dataset_id, date=year, country=country, frequency=frequency
+    )
+
+    return data['Series']['Obs']['@OBS_VALUE']
+
+def get_imf_dataset(date: str, country: str, indicator: str = 'ENSA_XDC_XDR_RATE', frequency='A'):
+    dataset_url = get_imf_dataset_url(
+        date=date, country=country, indicator=indicator, frequency=frequency)
+        
     with urllib.request.urlopen(dataset_url) as url:
         data = json.loads(url.read().decode())
     return data['CompactData']['DataSet']
 
-def get_imf_dataset_url(date : str, geo_code : str, indicator : str = 'ENSA_XDC_XDR_RATE'):
-    if geo_code not in IMF_SUPPORTED_GEO:
-        raise ValueError("Invalid geographical area code: {code}".format(code=geo_code))
 
-    url = IMF_BASE_URL+"/A.{ref_area}.{indicator}?startPeriod={date1}&endPeriod={date2}".format(ref_area=geo_code,indicator=indicator, date1=date, date2=date)
+def get_imf_dataset_url(date: str, country: str, indicator: str, frequency: str):
+    iso_alpha2 = get_letter_id_by_name(country)
+    url = IMF_BASE_URL+"/{frequency}.{ref_area}.{indicator}?startPeriod={date1}&endPeriod={date2}".format(
+        frequency=frequency, ref_area=iso_alpha2, indicator=indicator, date1=date, date2=date)
     return url
-
