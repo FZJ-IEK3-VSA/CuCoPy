@@ -5,11 +5,16 @@
 The CuCoPy package provides methods for exchanging currencies and adjusting monetary values for inflation until 1960 on a yearly basis.
 
 ## Features
-* adjust money for inflation (1960 - last calendar year)
-* exchange currencies from 260+ countries
+* Adjust money for inflation (1960 - last calendar year)
+* Exchange currencies from 60+ countries.
+* Data sources: Exchange rates (ER) and Consumer Price Index (CPI) from the [International Monetary Fund (IMF) API](https://fgeerolf.com/data/imf/api.html#ifs) and [IMF Data Explorer](https://data.imf.org/en/Data-Explorer?datasetUrn=IMF.STA:PPI(3.0.0))  
+
+**Note on the Euro:** For countries using the Euro (EUR), CuCoPy assumes the harmonized inflation value for the Euro Area.
+
+**Missing countries:** If the ER or CPI of a country's currency is missing for your conversion, please contact the developers to request support.
+
 
 ## Installation
-
 
 ### Installation from conda-forge
 
@@ -54,7 +59,7 @@ Change the directory into the new repository
 ### Installation with Conda Dependencies
 Create a new environment with all necessary conda depenendcies
 
-	mamba env create --file=environment.yml
+	mamba env create -f env.yml
 
 Install the local package in development mode
 
@@ -67,64 +72,25 @@ Then install CuCoPy via python as follows
 	pip install -e .
 
 ## Example	
-In the following code snippet, a value from 2010 is given in Euros and its remaining purchasing power in 2021 is to be calculated:
+In the following code section, the value in 2020 Euro is converted to the value in 2025 USD.
 
 	from cucopy import Currency
+	cur = Currency()
 
-	# Here, the ISO code may be omitted as the CuCoPy package defaults to "de" (Euro)
-	de_cur = Currency(recording_year="2010", value=500, iso="de")
-	de_cur.set_target_year("2021")
+	cur.convert_currency(value=100, base_year="2020", base_currency="EUR", target_year="2025", target_currency="USD", operation_order="inflation_first")
+	>> 137.41
 
-	remaining_pp = de_cur.get_purchasing_power()
-	>> 492.9009...
-
-Subsequently one might also want to get the equivalent worth of an earlier recorded value:
-    
-	...
-	gb_cur = Currency(recording_year="1999", value=100, iso="gb")
-	gb_cur.set_target_year("2000")
-
-	equiv_worth = gb_cur.get_equivalent_worth()
-	>> 101.1829...
-
-Note: the preceding example is taken from the UK Parliament's statistical literacy guide "How to adjust for inflation", which provided formulas on working with the consumer price index (CPI) and inflation rates.
-
-To exchange monetary values between currencies, the target currency's ISO code has to be provided:
-
-	...
-	de_cur = Currency("2015", 500)
-	de_cur.set_target_currency("us")
-
-	exchanged_val = de_cur.get_exchanged_value()
-	>> 554.7564...
-
-A workflow to adjust for inflation and exchange the newly-adjusted value might look like this:
-
-	...
-	recording_year = "2015"
-	recording_value = 100
-	recording_iso = "de"
-	target_iso = "us"
-	target_year = "2020"
-
-	recording_cur = Currency(recording_year, recording_value, recording_iso)
-	recording_cur.set_target_year(target_year)
-
-	adjusted_value = recording_cur.get_equivalent_worth()
-	>> 105.8093...
-
-	recording_cur.set_value(adjusted_value)
-	recording_cur.set_recording_year(target_year)
-
-	recording_cur.set_target_currency(target_iso)
-	recording_cur.get_exchanged_value()
-	>> 120.8549...
+For a deeper look into the features of CuCoPy, there a tutorial notebook is available.
 
 ## License
 
 MIT License
 
-Copyright (c) 2021-2024 Julian Schönau (FZJ/ICE-2), Patrick Kuckertz (FZJ/ICE-2), Jann Weinand (FZJ/ICE-2), Leander Kotzur (FZJ/IEK-3), Detlef Stolten (FZJ/ICE-2)
+Copyright (C) 2021-2026 FZJ-ICE-2
+
+Active Developers: Maxime Gorres, Jan Göpfert, Patrick Kuckertz, Jann Weinand
+
+Alumni: Julian Schönau, Leander Kotzur, Detlef Stolten
 
 You should have received a copy of the MIT License along with this program.
 If not, see https://opensource.org/licenses/MIT

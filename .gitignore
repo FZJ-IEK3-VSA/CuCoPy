@@ -15,6 +15,7 @@ __pycache__/
 *build/
 *dist/
 */__pycache__
+cucopy/cucopy/cucopy_cache
 
 # file types to ignore
 *.pyc
@@ -29,3 +30,4 @@ __pycache__/
 notes.txt
 */_legacy_comments.py
 ./run.py
+test.ipynb

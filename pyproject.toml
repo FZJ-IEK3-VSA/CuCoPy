@@ -1,6 +1,57 @@
-[build-system]
-requires = [
-    "setuptools>=54",
-    "wheel"
+[project]
+name = "cucopy"
+description = "Module for exchanging monetary values and inflation adjustment."
+version = "1.1"
+authors = [      
+    {name = "Julian Schönau"},
+    {name = "Jan Göpfert"},
+    {name = "Maxime Gorres"},
+    {name = "Patrick Kuckertz"},
+    {name = "Jann Weinand"},
+    {name = "Leander Kotzur"},
+    {name = "Detlef Stolten"},
 ]
+readme = { file = "README.md", content-type = "text/markdown" }
+license = {text = "MIT"}
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Programming Language :: Python :: 3",
+    'Intended Audience :: Science/Research',
+    'License :: OSI Approved :: MIT License',
+    'Natural Language :: English',
+    'Operating System :: OS Independent',
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Utilities",
+]
+keywords = [
+    "currency conversion",
+    "inflation",
+    "exchange rate",    
+    "monetary",
+    "money",    
+    "finance",
+]
+
+dependencies = [
+    "setuptools>=54",
+    "pip",    
+    "wheel",
+    "sdmx1==2.23.1"
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["*"]
+
+[build-system]
+requires = ["setuptools"]
 build-backend = "setuptools.build_meta"

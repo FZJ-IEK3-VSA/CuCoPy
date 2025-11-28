@@ -1,0 +1,68 @@
+# ISO 4217 currency code to ISO 3166-1 alpha-3 country codes for currencies
+
+# 🌍 Europe
+EUR: G163  # Euro area
+GBP: GBR   # United Kingdom
+CHF: CHE   # Switzerland
+SEK: SWE   # Sweden
+NOK: NOR   # Norway
+DKK: DNK   # Denmark
+CZK: CZE   # Czechia
+HUF: HUN   # Hungary
+PLN: POL   # Poland
+RON: ROU   # Romania
+BGN: BGR   # Bulgaria
+HRK: HRV   # Croatia
+RSD: SRB   # Serbia
+TRY: TUR   # Turkey
+
+# 🌎 Americas
+USD: USA   # United States
+CAD: CAN   # Canada
+MXN: MEX   # Mexico
+BRL: BRA   # Brazil
+CLP: CHL   # Chile
+COP: COL   # Colombia
+PEN: PER   # Peru
+BBD: BRB   # Barbados
+
+# 🌏 Asia
+JPY: JPN   # Japan
+CNY: CHN   # China
+INR: IND   # India
+RUB: RUS   # Russia
+KRW: KOR   # South Korea
+SGD: SGP   # Singapore
+MYR: MMR   # Malaysia
+THB: THA   # Thailand
+IDR: IDN   # Indonesia
+VND: VNM   # Vietnam
+PHP: PHL   # Philippines
+PKR: PAK   # Pakistan
+LKR: LKA   # Sri Lanka
+BDT: BGD   # Bangladesh
+AED: ARE   # United Arab Emirates
+QAR: QAT   # Qatar
+OMR: OMN   # Oman
+BHD: BHR   # Bahrain
+KWD: KWT   # Kuwait
+SAR: SAU   # Saudi Arabia
+JOD: JOR   # Jordan
+IQD: IRQ   # Iraq
+AFN: AFG   # Afghanistan
+ILS: ISR   # Israel
+HKD: HKG   # Hong Kong
+KZT: KAZ   # Kazakhstan
+
+# 🌍 Africa
+ZAR: ZAF   # South Africa
+NGN: NGA   # Nigeria
+EGP: EGY   # Egypt
+MAD: MAR   # Morocco
+DZD: DZA   # Algeria
+KES: KEN   # Kenya
+TND: TUN   # Tunisia
+
+# 🌏 Oceania
+AUD: AUS   # Australia
+NZD: NZL   # New Zealand

@@ -1,0 +1,250 @@
+# 🌍 Africa
+DZ: algeria
+AO: angola
+BJ: benin
+BW: botswana
+BF: burkina faso
+BI: burundi
+CV: cabo verde
+CM: cameroon
+CF: central african republic
+TD: chad
+KM: comoros
+CD: democratic republic of the congo
+CG: congo
+CI: côte d'ivoire
+DJ: djibouti
+EG: egypt
+GQ: equatorial guinea
+ER: eritrea
+SZ: eswatini
+ET: ethiopia
+GA: gabon
+GM: gambia
+GH: ghana
+GN: guinea
+GW: guinea-bissau
+KE: kenya
+LS: lesotho
+LR: liberia
+LY: libya
+MG: madagascar
+MW: malawi
+ML: mali
+MR: mauritania
+MU: mauritius
+YT: mayotte
+MA: morocco
+MZ: mozambique
+NA: namibia
+NE: niger
+NG: nigeria
+RE: réunion
+RW: rwanda
+SH: saint helena
+ST: sao tome and principe
+SN: senegal
+SC: seychelles
+SL: sierra leone
+SO: somalia
+ZA: south africa
+SS: south sudan
+SD: sudan
+TZ: tanzania, united republic of
+TG: togo
+TN: tunisia
+UG: uganda
+EH: western sahara
+ZM: zambia
+ZW: zimbabwe
+
+# 🌍 Europe
+AL: albania
+AD: andorra
+AM: armenia
+AT: austria
+AZ: azerbaijan
+BY: belarus
+BE: belgium
+BA: bosnia and herzegovina
+BG: bulgaria
+HR: croatia
+CY: cyprus
+CZ: czechia
+DK: denmark
+EE: estonia
+FI: finland
+FR: france
+GE: georgia
+DE: germany
+GI: gibraltar
+GR: greece
+HU: hungary
+IS: iceland
+IE: ireland
+IM: isle of man
+IT: italy
+JE: jersey
+KZ: kazakhstan
+LV: latvia
+LI: liechtenstein
+LT: lithuania
+LU: luxembourg
+MT: malta
+MD: republic of moldova
+MC: monaco
+ME: montenegro
+NL: netherlands
+MK: republic of north macedonia
+NO: norway
+PL: poland
+PT: portugal
+RO: romania
+RU: russian federation
+RS: serbia
+SK: slovakia
+SI: slovenia
+ES: spain
+SE: sweden
+CH: switzerland
+TR: turkey
+UA: ukraine
+GB: united kingdom of great britain and northern ireland
+VA: holy see
+U2: Euro area (Member States and Institutions of the Euro Area) changing composition
+AX: åland islands
+
+# 🌍 Asia
+AF: afghanistan
+BH: bahrain
+BD: bangladesh
+BT: bhutan
+BN: brunei darussalam
+KH: cambodia
+CN: china
+HK: hong kong
+IN: india
+ID: indonesia
+IR: iran (islamic republic of)
+IQ: iraq
+IL: israel
+JP: japan
+JO: jordan
+KW: kuwait
+KG: kyrgyzstan
+LA: lao people's democratic republic
+LB: lebanon
+MO: macao
+MY: malaysia
+MV: maldives
+MN: mongolia
+MM: myanmar
+NP: nepal
+OM: oman
+PK: pakistan
+PS: state of palestine
+PH: philippines
+QA: qatar
+SA: saudi arabia
+SG: singapore
+KR: republic of korea
+KP: democratic people's republic of korea
+LK: sri lanka
+SY: syrian arab republic
+TW: taiwan
+TJ: tajikistan
+TH: thailand
+TL: timor-leste
+TR: turkey
+TM: turkmenistan
+AE: united arab emirates
+UZ: uzbekistan
+VN: viet nam
+YE: yemen
+
+# 🌍 North America
+AG: antigua and barbuda
+BS: bahamas
+BB: barbados
+BZ: belize
+BM: bermuda
+CA: canada
+KY: cayman islands
+CR: costa rica
+CU: cuba
+DM: dominica
+DO: dominican republic
+SV: el salvador
+GD: grenada
+GP: guadeloupe
+GT: guatemala
+HT: haiti
+HN: honduras
+JM: jamaica
+MX: mexico
+NI: nicaragua
+PA: panama
+PR: puerto rico
+KN: saint kitts and nevis
+LC: saint lucia
+MF: saint martin (french part)
+VC: saint vincent and the grenadines
+TT: trinidad and tobago
+US: united states of america
+VG: british virgin islands
+VI: united states virgin islands
+
+# 🌍 South America
+AR: argentina
+BO: bolivia (plurinational state of)
+BR: brazil
+CL: chile
+CO: colombia
+EC: ecuador
+GY: guyana
+PY: paraguay
+PE: peru
+SR: suriname
+UY: uruguay
+VE: venezuela
+
+# 🌍 Oceania
+AS: american samoa
+AU: australia
+CX: christmas island
+CC: cocos (keeling) islands
+CK: cook islands
+FJ: fiji
+PF: french polynesia
+GU: guam
+KI: kiribati
+MH: marshall islands
+FM: micronesia
+NR: nauru
+NC: new caledonia
+NZ: new zealand
+NU: niue
+NF: norfolk island
+MP: northern mariana islands
+PW: palau
+PG: papua new guinea
+WS: samoa
+SB: solomon islands
+TK: tokelau
+TO: tonga
+TV: tuvalu
+VU: vanuatu
+WF: wallis and futuna
+
+# 🌍 Other
+AQ: antarctica
+BV: bouvet island
+IO: british indian ocean territory
+FK: falkland islands (malvinas)
+FO: faroe islands
+GL: greenland
+HM: heard island and mcdonald islands
+SJ: svalbard and jan mayen
+GS: south georgia and the south sandwich islands
+TF: french southern territories
+UM: united states minor outlying islands

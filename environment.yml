@@ -1,4 +1,0 @@
-name: cucopy_env
-
-dependencies:
-  - pandas
