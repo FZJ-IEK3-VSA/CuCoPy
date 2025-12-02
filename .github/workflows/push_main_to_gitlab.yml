@@ -25,5 +25,5 @@ jobs:
           git switch main
           echo "Checkout complete"
           echo start to push
-          git push https://push_to_jugit:${{ secrets.GITLAB_ACCESS_TOKEN }}@jugit.fz-juelich.de/iek-3/groups/data-and-model-integration/cucopy.git main
+          git push --force https://push_to_jugit:${{ secrets.GITLAB_ACCESS_TOKEN }}@jugit.fz-juelich.de/iek-3/groups/data-and-model-integration/cucopy.git main
           echo push done
