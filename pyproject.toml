@@ -1,7 +1,7 @@
 [project]
 name = "cucopy"
 description = "Module for exchanging monetary values and inflation adjustment."
-version = "1.2.0"
+version = "1.2.1"
 authors = [      
     {name = "Julian Schönau"},
     {name = "Jan Göpfert"},
@@ -35,7 +35,9 @@ keywords = [
 ]
 
 dependencies = [
-    "sdmx1==2.23.1"
+    "PyYAML>=6.0",
+    "sdmx1>=2.23.1",
+    "joblib>=1.3.2"
 ]
 
 [project.optional-dependencies]
@@ -47,6 +49,9 @@ package-dir = {"" = "src"}
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["cucopy*"]
+
+[tool.setuptools.package-data]
+"cucopy" = ["data/*.yaml"]
 
 [build-system]
 requires = ["setuptools"]
