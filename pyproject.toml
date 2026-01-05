@@ -1,7 +1,7 @@
 [project]
 name = "cucopy"
 description = "Module for exchanging monetary values and inflation adjustment."
-version = "1.1"
+version = "1.2.0"
 authors = [      
     {name = "Julian Schönau"},
     {name = "Jan Göpfert"},
@@ -21,7 +21,6 @@ classifiers = [
     'License :: OSI Approved :: MIT License',
     'Natural Language :: English',
     'Operating System :: OS Independent',
-    "Intended Audience :: Science/Research",
     "Intended Audience :: Developers",
     "Topic :: Scientific/Engineering",
     "Topic :: Utilities",
@@ -36,9 +35,6 @@ keywords = [
 ]
 
 dependencies = [
-    "setuptools>=54",
-    "pip",    
-    "wheel",
     "sdmx1==2.23.1"
 ]
 
@@ -50,7 +46,7 @@ package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["*"]
+include = ["cucopy*"]
 
 [build-system]
 requires = ["setuptools"]
