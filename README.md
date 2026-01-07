@@ -1,4 +1,4 @@
-<a href="https://www.fz-juelich.de/en/iek/iek-3"><img src="https://raw.githubusercontent.com/OfficialCodexplosive/README_Assets/862a93188b61ab4dd0eebde3ab5daad636e129d5/FJZ_IEK-3_logo.svg" alt="FZJ Logo" width="300px"></a>
+<a href="https://www.fz-juelich.de/en/ice/ice-2"><img src="https://github.com/FZJ-IEK3-VSA/README_assets/blob/main/JSA-Header.svg?raw=True" alt="Forschungszentrum Juelich Logo" width="175px"></a>
 
 # CuCoPy - Currency Conversion for Python
 
@@ -22,12 +22,12 @@ CuCoPy can be installed into a new environment with the following command
 
 	mamba create -n -c conda-forge cucopy_env cucopy
 
-Or can be installed into an exisitng and activated environment with
+Or can be installed into an existing and activated environment with
 
 	mamba install -c conda-forge cucopy
  
 
-**Note on Mamba vs.Conda:** `mamba` commands can be substitued with `conda`. We highly recommend using [(Micro-)Mamba](https://mamba.readthedocs.io/en/latest/) instead of Conda. The recommended way to use Mamba on your system is to install the [Miniforge distribution](https://github.com/conda-forge/miniforge#miniforge3). They offer installers for Windows, Linux and OS X. In principle, Conda and Mamba are interchangeable. The commands and concepts are the same. The distributions differ in the methodology for determining dependencies when installing Python packages. Mamba relies on a more modern methodology, which (with the same result) leads to very significant time savings during the installation of ETHOS.FINE. Switching to Mamba usually does not lead to any problems, as it is virtually identical to Conda in terms of operation.
+**Note on Mamba vs.Conda:** `mamba` commands can be substitued with `conda`. We highly recommend using [(Micro-)Mamba](https://mamba.readthedocs.io/en/latest/) instead of Conda. The recommended way to use Mamba on your system is to install the [Miniforge distribution](https://github.com/conda-forge/miniforge#miniforge3). They offer installers for Windows, Linux and OS X. In principle, Conda and Mamba are interchangeable. The commands and concepts are the same. The distributions differ in the methodology for determining dependencies when installing Python packages. Switching to Mamba usually does not lead to any problems, as it is virtually identical to Conda in terms of operation.
 
 
 ### Installation from pypi into a conda envrionment
@@ -43,7 +43,7 @@ CuCoPy can be installed directly via pip:
 
 	pip install cucopy
 
-**Note on using pip within a conda environment** To install packages within a conda environment pip must already be installed in that environment. Please see this [Stack Overflow post](https://stackoverflow.com/questions/41060382/using-pip-to-install-packages-to-anaconda-environment) and this [Anaconda Article](https://www.anaconda.com/blog/understanding-conda-and-pip).
+**Note on using pip within a conda environment** To install packages within a conda environment, pip must already be installed in that environment. Please see this [Stack Overflow post](https://stackoverflow.com/questions/41060382/using-pip-to-install-packages-to-anaconda-environment) and this [Anaconda Article](https://www.anaconda.com/blog/understanding-conda-and-pip).
 
 
 ### Local installation for Development 
@@ -80,7 +80,7 @@ In the following code section, the value in 2020 Euro is converted to the value 
 	cur.convert_currency(value=100, base_year="2020", base_currency="EUR", target_year="2025", target_currency="USD", operation_order="inflation_first")
 	>> 137.41
 
-For a deeper look into the features of CuCoPy, there a tutorial notebook is available.
+For a deeper look into the features of CuCoPy, is a tutorial notebook available.
 
 ## License
 
@@ -106,6 +106,6 @@ The CuCoPy package relies heavily on the datasets made available by the *Interna
 
 The *IMF* API provides information on international exchange rates as well as consumer price indices and is used for research purposes. Their terms can be accessed here: https://www.imf.org/external/terms.htm
 
-This work is supported by the Federal Ministry for Economic Affairs and Climate Action (BMWK) with a grant for the project LOD-GEOSS (03EI1005B).
+This work was supported by the Federal Ministry for Economic Affairs and Climate Action (BMWK) with a grant for the project LOD-GEOSS (03EI1005B).
 
 <a href="https://www.bmwk.de/Navigation/EN/Home/home.html"><img src="https://www.bmwk.de/SiteGlobals/BMWI/StyleBundles/Bilder/bmwi_logo_en.svg?__blob=normal&v=13" alt="BMWK Logo" width="130px"></a>
