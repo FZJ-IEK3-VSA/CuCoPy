@@ -1,4 +1,3 @@
-import pytest
 from cucopy import Currency
 
 cur = Currency(ignore_cache=True, normalize_to="USD", aggregate_from="A")

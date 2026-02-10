@@ -22,7 +22,7 @@ CuCoPy can be installed into a new environment with the following command
 
 	mamba create -n -c conda-forge cucopy_env cucopy
 
-Or can be installed into an existing and activated environment with
+Or can be installed into an existing environment with
 
 	mamba install -c conda-forge cucopy
  

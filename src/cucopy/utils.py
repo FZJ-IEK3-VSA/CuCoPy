@@ -34,14 +34,14 @@ def map_currency_to_country_iso(currency_code):
 
 def get_single_imf_datapoint(dataset_id : str, currency : str, year : str, ignore_cache: bool = False, frequency: str='M') -> float:
     iso = map_currency_to_country_iso(currency)
-    
+
     current_year = str(datetime.now().year)    
     if year == current_year:
         ignore_cache = True
         if frequency == 'A':
             # For current year, annual data not available, use monthly.
             print(f"Warning: Current year {current_year} requested with annual frequency. Using monthly frequency instead.")
-            frequency = 'M'        
+            frequency = 'M'    
 
     if ignore_cache:
         # If current year is requested or cache should be ignored, always get fresh data.
@@ -50,10 +50,18 @@ def get_single_imf_datapoint(dataset_id : str, currency : str, year : str, ignor
             indicator=dataset_id, date=year, iso=iso, frequency=frequency
         )
     else:
-        return get_imf_value_cached(
-            indicator=dataset_id, date=year, iso=iso, frequency=frequency
-        )
-
+        try:
+            return get_imf_value_cached(
+                indicator=dataset_id, date=year, iso=iso, frequency=frequency
+            )
+        except ValueError:
+            # If annual data is not available, fall back to monthly data.
+            # We ignore the cache here as well, as annual data can be available in the future
+            print(f"Warning: No annual data for year {year}. Using monthly frequency instead.")
+            frequency = 'M'
+            return get_imf_value_uncached(
+                indicator=dataset_id, date=year, iso=iso, frequency=frequency
+            )
 
 @memory.cache
 def get_imf_value_cached(date: str, iso: str, indicator: tuple, frequency='M'):    
@@ -68,5 +76,3 @@ def get_imf_value_uncached(date: str, iso: str, indicator: tuple, frequency='M')
         return np.mean(values)    
     except:
         raise ValueError(f"Could not get IMF data point for indicator {indicator[0]}.{key} for year {date}.")
-
-    
