@@ -73,6 +73,9 @@ def get_imf_value_uncached(date: str, iso: str, indicator: tuple, frequency='M')
         data = IMF_DATA.data(indicator[0], key=key, params={'startPeriod': date, 'endPeriod': date})
         df = sdmx.to_pandas(data)
         values = df.values    
-        return np.mean(values)    
+        mean_value = np.mean(values)
+        if np.isnan(mean_value):
+            raise ValueError(f"Could not get IMF data point for indicator {indicator[0]}.{key} for year {date}.")
+        return mean_value    
     except:
         raise ValueError(f"Could not get IMF data point for indicator {indicator[0]}.{key} for year {date}.")

@@ -56,18 +56,25 @@ class Currency(object):
 
     def validate_year(self, year_str : str) -> str:
         """
-        Validate that a string matches the YYYY format.
+        Validate that a string matches the YYYY format and is not in the future.
 
         Args:
             year_str (str): Year as a string.
 
+        Raises:
+            ValueError: If year format is invalid or year is in the future.
         """
 
         try:
             year = datetime.datetime.strptime(year_str, "%Y").year
-            return str(year)
         except ValueError as exc:
             raise ValueError("Incorrect year format, should be YYYY") from exc
+        
+        current_year = datetime.datetime.now().year
+        if year > current_year:
+            raise ValueError(f"Year {year} is in the future. Currency conversion is only supported for past and current years.")
+        
+        return str(year)
     
         
     def apply_notation(self, value: float, value_notation: str):
