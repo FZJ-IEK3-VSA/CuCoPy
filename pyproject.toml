@@ -1,7 +1,7 @@
 [project]
 name = "cucopy"
 description = "Module for exchanging monetary values and inflation adjustment."
-version = "1.2.2"
+version = "1.2.3"
 authors = [      
     {name = "Julian Schönau"},
     {name = "Jan Göpfert"},
