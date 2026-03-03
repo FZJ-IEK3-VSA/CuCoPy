@@ -1,6 +1,12 @@
+from typing import Annotated
+from datadesclib import meta
 from . import utils 
 
 
+@meta(
+    semanticConcept="IMFDataParser",
+    description="The Parser class provides functionality to parse data from IMF and extract CPI or exchange rates."
+)
 class Parser(object):
     """
     The Parser class provides the following functionality:
@@ -9,7 +15,24 @@ class Parser(object):
     The parameter stored in a Parser object refers to:
     * the ISO 3166 ALPHA-2 code, which identifies a country and therefore the dominant currency.
     """
-    def __init__(self, ignore_cache: bool=False, normalize_to: str="USD", aggregate_from: str="A"):
+    @meta(description="Constructor for creating a Parser instance.")
+    def __init__(
+        self,
+        ignore_cache: Annotated[bool, {
+            "description": "Whether to ignore the local cache and fetch fresh data from IMF",
+            "default": False
+        }] = False,
+        normalize_to: Annotated[str, {
+            "description": "Target currency for normalization of exchange rates",
+            "default": "USD"
+        }] = "USD",
+        aggregate_from: Annotated[str, {
+            "description": "Frequency for data aggregation",
+            "enum": ["A", "M"],
+            "note": "'A' for annual, 'M' for monthly",
+            "default": "A"
+        }] = "A"
+    ):
         """
         Constructor for creating a Currency class instance
         **Arguments:**
@@ -21,7 +44,24 @@ class Parser(object):
         self.aggregate_from = aggregate_from # "A" or "M"
         #self.country_name = country
 
-    def get_cpi(self, currency: str, year : str) -> float:
+    @meta(
+        semanticConcept="ConsumerPriceIndexRetrieval",
+        description="Function for extracting the cpi from the International Monetary Fund dataset for CPI (PCPI_IX)."
+    )
+    def get_cpi(
+        self,
+        currency: Annotated[str, {
+            "description": "ISO 4217 Currency code",
+            "example": "EUR",
+            "minLength": 3,
+            "maxLength": 3
+        }],
+        year: Annotated[str, {
+            "description": "Target year for the CPI data",
+            "pattern": "^[0-9]{4}$",
+            "example": "2023"
+        }]
+    ) -> Annotated[float, {"description": "The extracted Consumer Price Index (CPI) value", "type": "float"}]:
         """
         Function for extracting the cpi from the International Monetary Fund dataset for CPI (PCPI_IX).
 
@@ -53,8 +93,22 @@ class Parser(object):
 
         return cpi
 
-
-    def get_exchange_rate(self, currency: str, year : str) -> float:
+    @meta(
+        semanticConcept="ExchangeRateRetrieval",
+        description="Function for extracting the exchange rate from the International Monetary Fund dataset for Exchange Rates (ENSA_XDC_XDR_RATE)."
+    )
+    def get_exchange_rate(
+        self,
+        currency: Annotated[str, {
+            "description": "ISO 4217 Currency code",
+            "example": "JPY"
+        }],
+        year: Annotated[str, {
+            "description": "Target year for the exchange rate",
+            "pattern": "^[0-9]{4}$",
+            "example": "2022"
+        }]
+    ) -> Annotated[float, {"description": "The extracted exchange rate relative to the normalized currency (USD/SDR)", "type": "float"}]:
         """
         Function for extracting the exchange rate from the International Monetary Fund dataset for Exchange Rates (ENSA_XDC_XDR_RATE).
 
