@@ -1,7 +1,13 @@
 import datetime
+from typing import Annotated, Dict, Optional
+from datadesclib import meta
 from .parser import Parser
 
 
+@meta(
+    semanticConcept="CurrencyConverter",
+    description="Currency class for handling values with inflation and exchange rate adjustments."
+)
 class Currency(object):
     """
     Currency class for handling values with inflation and exchange rate adjustments.
@@ -17,7 +23,10 @@ class Currency(object):
     """
 
     # dictionary of the most important scientific number notations and their value
-    _allowed_notations = {
+    _allowed_notations : Annotated[Dict[str, int], {
+        "description": "Mapping of notation symbols to their multiplier values",
+        "example": {"K": 1000, "M": 1000000}
+    }] = {
         ""  : int(1e0),
         "K" : int(1e3),
         "M" : int(1e6),
@@ -25,7 +34,25 @@ class Currency(object):
         "T" : int(1e12)         
     }
 
-    def __init__(self, ignore_cache: bool=False, normalize_to: str="USD", aggregate_from: str="A", **kwargs):
+    @meta(description="Initialize a Currency instance with a Parser.")
+    def __init____init__(
+        self,
+        ignore_cache: Annotated[bool, {
+            "description": "Whether to ignore cached data when fetching CPI and exchange rates",
+            "default": False
+        }] = False,
+        normalize_to: Annotated[str, {
+            "description": "Currency to normalize input and target currency to for calculating exchange rates",
+            "default": "USD"
+        }] = "USD",
+        aggregate_from: Annotated[str, {
+            "description": "Frequency for exchange rates aggregation",
+            "enum": ["A", "M"],
+            "note": "'A' for annual, 'M' for monthly",
+            "default": "A"
+        }] = "A",
+        **kwargs
+    ):
         """
         Initialize a Currency instance with a Parser.
 
@@ -37,8 +64,19 @@ class Currency(object):
         self.parser = Parser(ignore_cache=ignore_cache, normalize_to=normalize_to, aggregate_from=aggregate_from, **kwargs)         
 
 
+    @meta(description="Register a new notation symbol globally for all Currency objects.")
     @classmethod
-    def unique_notation(cls, notation : str, notation_pow : int):
+    def unique_notation(
+            cls,
+            notation: Annotated[str, {
+                "description": "New and unique symbol string",
+                "example": "G"
+            }],
+            notation_pow: Annotated[int, {
+                "description": "Power of 10 for the scientific notation (1E[notation_pow])",
+                "example": 9
+            }]
+    ):
         """
         Register a new notation symbol globally for all Currency objects.
         Example: Currency.unique_notation("G", 9)  # "G" = 10^9
@@ -54,7 +92,15 @@ class Currency(object):
             raise ValueError(f"Notation {notation} already defined.")
 
 
-    def validate_year(self, year_str : str) -> str:
+    @meta(description="Validate that a string matches the YYYY format and is not in the future.")
+    def validate_year(
+        self,
+        year_str: Annotated[str, {
+            "description": "Year as a string in YYYY format",
+            "pattern": "^[0-9]{4}$",
+            "example": "2023"
+        }]
+    ) -> Annotated[str, {"description": "Validated year string"}]:
         """
         Validate that a string matches the YYYY format and is not in the future.
 
@@ -77,7 +123,19 @@ class Currency(object):
         return str(year)
     
         
-    def apply_notation(self, value: float, value_notation: str):
+    @meta(description="Function to convert the value using a notation.")
+    def apply_notation(
+        self,
+        value: Annotated[float, {
+            "description": "The base numeric value before notation application",
+            "example": 1.5
+        }],
+        value_notation: Annotated[str, {
+            "description": "Notation symbol to apply",
+            "enum": ["", "K", "M", "B", "T"],
+            "example": "M"
+        }]
+    ) -> Annotated[float, {"description": "The calculated absolute value", "type": "float"}]:
         """
         Function to convert the value using a notation.
 
@@ -91,8 +149,40 @@ class Currency(object):
         else:
             raise ValueError(f"Notation {value_notation} not supported.\nSupported notations are: {self._allowed_notations}.")
 
-
-    def adjust_for_inflation(self, value: float, currency: str, base_year: str, target_year: str, value_notation: str = None, mode: str = "equivalent"):
+    @meta(
+        semanticConcept="InflationAdjustment",
+        description="Function for getting the inflation-corrected value"
+    )
+    def adjust_for_inflation(
+            self,
+            value: Annotated[float, {
+                "description": "The monetary value to adjust",
+                "unit": "CurrencyUnit"
+            }],
+            currency: Annotated[str, {
+                "description": "ISO 4217 code of the currency",
+                "example": "EUR",
+                "minLength": 3,
+                "maxLength": 3
+            }],
+            base_year: Annotated[str, {
+                "description": "Year of the origin value",
+                "example": "2010"
+            }],
+            target_year: Annotated[str, {
+                "description": "Year regarding which the value should be adjusted",
+                "example": "2024"
+            }],
+            value_notation: Annotated[Optional[str], {
+                "description": "Optional notation (e.g. 'K', 'M') if value is abbreviated",
+                "default": None
+            }] = None,
+            mode: Annotated[str, {
+                "description": "Method of calculation: inflation-corrected worth or purchasing power",
+                "enum": ["equivalent", "purchasing_power"],
+                "default": "equivalent"
+            }] = "equivalent"
+    ) -> Annotated[float, {"description": "Inflation-adjusted monetary value"}]:
         """
         Function for getting the inflation-corrected value
 
@@ -126,8 +216,33 @@ class Currency(object):
             
         return target_value
 
-
-    def get_exchanged_value(self, value: float, year: str, base_currency: str, target_currency: str, value_notation: str = None):
+    @meta(
+        semanticConcept="CurrencyExchange",
+        description="Function for calculating the worth of the current currency in another country."
+    )
+    def get_exchanged_value(
+            self,
+            value: Annotated[float, {
+                "description": "The monetary value to exchange",
+                "unit": "BaseCurrencyUnit"
+            }],
+            year: Annotated[str, {
+                "description": "Historical year for the exchange rate",
+                "example": "2020"
+            }],
+            base_currency: Annotated[str, {
+                "description": "ISO code of the source currency",
+                "example": "USD"
+            }],
+            target_currency: Annotated[str, {
+                "description": "ISO code of the target currency",
+                "example": "EUR"
+            }],
+            value_notation: Annotated[Optional[str], {
+                "description": "Optional notation for the input value",
+                "default": None
+            }] = None
+    ) -> Annotated[float, {"description": "Value converted to target currency", "unit": "TargetCurrencyUnit"}]:
         """
         Function for calculating the worth of the current currency in another country.
 
@@ -153,9 +268,43 @@ class Currency(object):
             target_value = value * base_rate / target_rate
 
         return target_value
-    
-    
-    def convert_currency(self, value: str, base_year: str, base_currency: str, target_year: str, target_currency: str, value_notation: str = None, operation_order: str = "inflation_first"):
+
+    @meta(
+        semanticConcept="FullConversion",
+        description="Convert a currency value considering both inflation and exchange rate."
+    )
+    def convert_currency(
+            self,
+            value: Annotated[float, {
+                "description": "Raw monetary value to convert",
+                "unit": "BaseCurrencyUnit"
+            }],
+            base_year: Annotated[str, {
+                "description": "Year of the base value",
+                "example": "2015"
+            }],
+            base_currency: Annotated[str, {
+                "description": "ISO code of the currency of the input value",
+                "example": "GBP"
+            }],
+            target_year: Annotated[str, {
+                "description": "Target year for the result",
+                "example": "2024"
+            }],
+            target_currency: Annotated[str, {
+                "description": "ISO code of the desired target currency",
+                "example": "USD"
+            }],
+            value_notation: Annotated[Optional[str], {
+                "description": "Scientific notation of the value (e.g., 'K', 'M')",
+                "default": None
+            }] = None,
+            operation_order: Annotated[str, {
+                "description": "Determines the sequence of operations",
+                "enum": ["inflation_first", "exchange_first"],
+                "default": "inflation_first"
+            }] = "inflation_first"
+    ) -> Annotated[float, {"description": "Final converted and adjusted monetary value"}]:
         """
         Convert a currency value considering inflation and/or exchange rate.
 

@@ -3,6 +3,8 @@ import yaml
 import sdmx
 import logging
 import numpy as np
+from typing import Annotated, Tuple, Any
+from datadesclib import meta
 from joblib import Memory
 from datetime import datetime
 
@@ -24,7 +26,18 @@ with open(module_dir / "data/currency_iso_map.yaml", encoding="utf-8") as f:
     CURRENCY_TO_COUNTRY_ISO_CODE_MAP = yaml.safe_load(f)
 
 
-def map_currency_to_country_iso(currency_code):
+@meta(
+    semanticConcept="CurrencyToCountryMapping",
+    description="Map a currency code to its country's ISO 3166 ALPHA-2 code."
+)
+def map_currency_to_country_iso(
+    currency_code: Annotated[str, {
+        "description": "ISO 4217 Currency Code",
+        "example": "USD",
+        "minLength": 3,
+        "maxLength": 3
+    }]
+) -> Annotated[str, {"description": "ISO 3166 ALPHA-2 Country Code (e.g., 'US')"}]:
     try:        
         country = CURRENCY_TO_COUNTRY_ISO_CODE_MAP[currency_code]
         return country
@@ -32,7 +45,35 @@ def map_currency_to_country_iso(currency_code):
         raise ValueError(f"Invalid or not implemented currency code: {currency_code}. Please contact the developers.") from exc
 
 
-def get_single_imf_datapoint(dataset_id : str, currency : str, year : str, ignore_cache: bool = False, frequency: str='M') -> float:
+@meta(
+    semanticConcept="IMFDataRetrieval",
+    description="Get a single data point from the IMF dataset, handling caching and frequency fallback."
+)
+def get_single_imf_datapoint(
+    dataset_id: Annotated[Tuple[str, str], {
+        "description": "Tuple containing IMF Dataflow ID and Data Key",
+        "example": ("CPI", "CPI._T.SRP_IX")
+    }],
+    currency: Annotated[str, {
+        "description": "ISO 4217 Currency code",
+        "example": "EUR"
+    }],
+    year: Annotated[str, {
+        "description": "Target year for data retrieval",
+        "pattern": "^[0-9]{4}$",
+        "example": "2023"
+    }],
+    ignore_cache: Annotated[bool, {
+        "description": "Force fresh data retrieval from IMF API",
+        "default": False
+    }] = False,
+    frequency: Annotated[str, {
+        "description": "Data frequency",
+        "enum": ["A", "M"],
+        "note": "'A' for Annual, 'M' for Monthly",
+        "default": "M"
+    }] = 'M'
+) -> Annotated[float, {"description": "The retrieved data value (CPI or Exchange Rate)"}]:
     iso = map_currency_to_country_iso(currency)
 
     current_year = str(datetime.now().year)    
@@ -63,11 +104,29 @@ def get_single_imf_datapoint(dataset_id : str, currency : str, year : str, ignor
                 indicator=dataset_id, date=year, iso=iso, frequency=frequency
             )
 
+@meta(
+    semanticConcept="CachedIMFQuery",
+    description="Retrieve IMF value from local cache if available."
+)
 @memory.cache
-def get_imf_value_cached(date: str, iso: str, indicator: tuple, frequency='M'):    
+def get_imf_value_cached(
+    date: Annotated[str, {"description": "Year string"}],
+    iso: Annotated[str, {"description": "Country ISO code"}],
+    indicator: Annotated[Tuple[str, str], {"description": "IMF Indicator Tuple"}],
+    frequency: Annotated[str, {"description": "Data frequency", "enum": ["A", "M"]}] = 'M'
+) -> Annotated[float, {"description": "Cached data value"}]:
     return get_imf_value_uncached(date, iso, indicator, frequency=frequency)
 
-def get_imf_value_uncached(date: str, iso: str, indicator: tuple, frequency='M'):
+@meta(
+    semanticConcept="DirectIMFQuery",
+    description="Retrieve IMF value directly from the API without using cache."
+)
+def get_imf_value_uncached(
+    date: Annotated[str, {"description": "Year string"}],
+    iso: Annotated[str, {"description": "Country ISO code"}],
+    indicator: Annotated[Tuple[str, str], {"description": "IMF Indicator Tuple"}],
+    frequency: Annotated[str, {"description": "Data frequency", "enum": ["A", "M"]}] = 'M'
+) -> Annotated[float, {"description": "Fetched data value"}]:
     key = f"{iso}.{indicator[1]}.{frequency}"
     try:
         data = IMF_DATA.data(indicator[0], key=key, params={'startPeriod': date, 'endPeriod': date})
