@@ -35,7 +35,7 @@ class Currency(object):
     }
 
     @meta(description="Initialize a Currency instance with a Parser.")
-    def __init____init__(
+    def __init__(
         self,
         ignore_cache: Annotated[bool, {
             "description": "Whether to ignore cached data when fetching CPI and exchange rates",
