@@ -87,22 +87,31 @@ def get_single_imf_datapoint(
     if ignore_cache:
         # If current year is requested or cache should be ignored, always get fresh data.
         # We ignore the cache for current year, as the data is updated during the year.
-        return get_imf_value_uncached(
-            indicator=dataset_id, date=year, iso=iso, frequency=frequency
-        )
+        try:
+            return get_imf_value_uncached(
+                indicator=dataset_id, date=year, iso=iso, frequency=frequency
+            )
+        except ValueError:
+            if frequency != 'M':
+                print(f"Warning: No {frequency} data for year {year}. Using monthly frequency instead.")
+                return get_imf_value_uncached(
+                    indicator=dataset_id, date=year, iso=iso, frequency='M'
+                )
+            raise
     else:
         try:
             return get_imf_value_cached(
                 indicator=dataset_id, date=year, iso=iso, frequency=frequency
             )
         except ValueError:
-            # If annual data is not available, fall back to monthly data.
-            # We ignore the cache here as well, as annual data can be available in the future
-            print(f"Warning: No annual data for year {year}. Using monthly frequency instead.")
-            frequency = 'M'
-            return get_imf_value_uncached(
-                indicator=dataset_id, date=year, iso=iso, frequency=frequency
-            )
+            if frequency != 'M':
+                # If annual data is not available, fall back to monthly data.
+                # We ignore the cache here as well, as annual data can be available in the future
+                print(f"Warning: No {frequency} data for year {year}. Using monthly frequency instead.")
+                return get_imf_value_uncached(
+                    indicator=dataset_id, date=year, iso=iso, frequency='M'
+                )
+            raise
 
 @meta(
     semanticConcept="CachedIMFQuery",
